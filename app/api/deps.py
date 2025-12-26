@@ -16,4 +16,4 @@ def get_db_session() -> Generator[Session, None, None]:
     Yields:
         Session: SQLAlchemy 데이터베이스 세션
     """
-    return get_db()
+    yield from get_db()

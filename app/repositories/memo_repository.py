@@ -66,7 +66,7 @@ class MemoRepository:
         total = db.query(func.count(Memo.id)).scalar()
         memos = (
             db.query(Memo)
-            .order_by(Memo.created_at.desc())
+            .order_by(Memo.updated_at.desc())
             .offset(skip)
             .limit(limit)
             .all()
