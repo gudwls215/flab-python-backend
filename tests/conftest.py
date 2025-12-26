@@ -7,9 +7,12 @@ from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
+from fastapi.testclient import TestClient
 
 from app.database import Base
 from app.models.memo import Memo
+from app.main import app
+from app.api.deps import get_db_session
 
 
 # 테스트용 인메모리 SQLite 데이터베이스
@@ -71,3 +74,21 @@ def create_test_memo(db_session: Session):
         db_session.refresh(memo)
         return memo
     return _create_memo
+
+
+@pytest.fixture
+def client(db_session: Session):
+    """
+    FastAPI TestClient fixture
+    DB 의존성을 테스트 DB 세션으로 오버라이드
+    """
+    def override_get_db_session():
+        try:
+            yield db_session
+        finally:
+            pass
+    
+    app.dependency_overrides[get_db_session] = override_get_db_session
+    with TestClient(app) as test_client:
+        yield test_client
+    app.dependency_overrides.clear()
