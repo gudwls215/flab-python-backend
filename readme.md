@@ -130,18 +130,6 @@ python -m app.main
 
 ---
 
-
-
-### HTTP 상태 코드
-
-- `200 OK` - 요청 성공
-- `201 Created` - 리소스 생성 성공
-- `204 No Content` - 삭제 성공
-- `404 Not Found` - 리소스를 찾을 수 없음
-- `422 Unprocessable Entity` - 유효성 검증 실패
-
----
-
 ## 🧪 테스트
 
 ### 전체 테스트 실행
