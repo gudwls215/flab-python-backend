@@ -65,22 +65,29 @@ git clone <repository-url>
 cd flab-python-backend
 ```
 
-### 2. 가상환경 생성 및 활성화
+### 2. uv 설치 (아직 설치하지 않은 경우)
 
 ```bash
+# Windows (PowerShell)
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Linux/Mac
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### 3. 가상환경 생성 및 의존성 설치
+
+```bash
+# uv를 사용하여 가상환경 생성 및 의존성 설치
+uv venv
+uv pip install -r requirements.txt
+
+# 가상환경 활성화
 # Windows
-python -m venv .venv
 .venv\Scripts\activate
 
 # Linux/Mac
-python -m venv .venv
 source .venv/bin/activate
-```
-
-### 3. 의존성 설치
-
-```bash
-pip install -r requirements.txt
 ```
 
 ### 4. 환경 변수 설정
