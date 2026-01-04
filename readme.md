@@ -162,6 +162,78 @@ pytest tests/integration/ -v
 
 ---
 
+## 부하 테스트 (Locust)
+
+### Locust 설치
+
+```bash
+# uv를 사용하여 설치
+uv pip install locust
+```
+
+### 부하 테스트 실행
+
+#### 1. CLI 모드 (헤드리스)
+
+```bash
+# 기본 부하 테스트 (10명 사용자, 60초간)
+locust --host=http://localhost:8000 --users 10 --spawn-rate 2 --run-time 60s --headless --html locust_report.html
+
+# 고부하 테스트 (100명 사용자, 5분간)
+locust --host=http://localhost:8000 --users 100 --spawn-rate 10 --run-time 5m --headless --html locust_report.html
+```
+
+#### 2. Web UI 모드
+
+```bash
+# Locust 웹 UI 실행
+locust --host=http://localhost:8000
+
+# 브라우저에서 http://localhost:8089 접속
+```
+
+### 부하 테스트 결과 예시
+
+**테스트 설정:**
+- 사용자 수: 10명 (MemoUser 5명 + HeavyLoadUser 5명)
+- 증가율: 초당 2명
+- 테스트 시간: 60초
+
+**결과:**
+- ✅ 총 요청 수: **696건**
+- ✅ 평균 RPS: **11.7 req/s**
+- ✅ 실패율: **0%**
+- ✅ 평균 응답 시간: **77ms**
+- ✅ 중앙값 응답 시간: **49ms**
+- ✅ 95 백분위수: **97ms**
+- ✅ 99 백분위수: **2100ms** (초기 DB 연결 시간 포함)
+
+**엔드포인트별 성능:**
+- `POST /api/v1/memos (대량 생성)`: 447건, 평균 77ms
+- `GET /api/v1/memos (대량 조회)`: 99건, 평균 40ms
+- `GET /api/v1/memos (목록 조회)`: 42건, 평균 14ms
+- `GET /api/v1/memos/{id} (상세 조회)`: 28건, 평균 11ms
+- `POST /api/v1/memos (생성)`: 26건, 평균 60ms
+- `PUT /api/v1/memos/{id} (수정)`: 14건, 평균 61ms
+- `DELETE /api/v1/memos/{id} (삭제)`: 9건, 평균 55ms
+
+### 부하 테스트 시나리오
+
+`locustfile.py`에는 두 가지 사용자 시나리오가 포함되어 있습니다:
+
+1. **MemoUser** - 일반 사용자 패턴
+   - 메모 목록 조회 (가중치: 3)
+   - 메모 상세 조회 (가중치: 2)
+   - 메모 생성 (가중치: 2)
+   - 메모 수정 (가중치: 1)
+   - 메모 삭제 (가중치: 1)
+
+2. **HeavyLoadUser** - 고부하 사용자 패턴
+   - 대량 메모 생성 (가중치: 5)
+   - 대량 목록 조회 (가중치: 3)
+
+---
+
 ## 개발 가이드
 
 ### 프로젝트 구조
