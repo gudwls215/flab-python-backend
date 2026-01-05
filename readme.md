@@ -79,7 +79,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ```bash
 # uv를 사용하여 가상환경 생성 및 의존성 설치
-uv venv
+uv venv --python 3.10
 uv pip install -r requirements.txt
 
 # 가상환경 활성화
@@ -286,7 +286,7 @@ alembic downgrade -1
 
 ```env
 # Database
-DATABASE_URL=postgresql://memo_user:memo_password@localhost:5432/memo_db
+DATABASE_URL=postgresql://memo_user:memo_password@localhost:5433/memo_db
 
 # Application
 APP_NAME=Memo API
